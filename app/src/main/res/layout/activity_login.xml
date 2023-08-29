@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_degrade"
+    tools:context=".activity.LoginActivity">
+
+  <TextView
+      android:id="@+id/textView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginBottom="8dp"
+      android:text="@string/email_text"
+      android:textColor="@color/white"
+      app:layout_constraintBottom_toTopOf="@+id/textInputLayout3"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+  <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/textInputLayout3"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginEnd="32dp"
+      android:layout_marginBottom="32dp"
+      android:background="@drawable/bg_edittext"
+      android:textColorHint="@color/white"
+      app:layout_constraintBottom_toTopOf="@+id/textView6"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textView">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInputEmail_loginScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:hint="@string/digite_email"
+        android:inputType="text|textEmailAddress" />
+
+  </com.google.android.material.textfield.TextInputLayout>
+
+
+  <TextView
+      android:id="@+id/textCadastro_loginScreen"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="32dp"
+      android:text="@string/naopossuiconta_loginscreen"
+      android:textColor="@color/white"
+      android:textSize="16sp"
+      app:layout_constraintBottom_toTopOf="@id/progressLogin"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/buttonEntrar_loginScreen" />
+
+  <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/textInputLayout"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginEnd="32dp"
+      android:layout_marginBottom="32dp"
+      android:background="@drawable/bg_edittext"
+      android:textColorHint="@color/white"
+      app:layout_constraintBottom_toTopOf="@+id/buttonEntrar_loginScreen"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textView6">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textInputSenha_loginScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/digite_senha"
+        android:inputType="text|textPassword"
+        tools:layout_editor_absoluteX="7dp"
+        tools:layout_editor_absoluteY="445dp" />
+  </com.google.android.material.textfield.TextInputLayout>
+
+  <Button
+      android:id="@+id/buttonEntrar_loginScreen"
+      android:layout_width="347dp"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="32dp"
+      android:background="@drawable/bg_button"
+      android:text="@string/entrar_loginscreen"
+      android:textColor="@color/dark_gray"
+      app:layout_constraintBottom_toTopOf="@+id/textCadastro_loginScreen"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+  <TextView
+      android:id="@+id/textView6"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="32dp"
+      android:layout_marginBottom="8dp"
+      android:text="@string/senha_text"
+      android:textColor="@color/white"
+      app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="200dp"
+      android:layout_height="60dp"
+      android:layout_marginBottom="16dp"
+      app:layout_constraintBottom_toTopOf="@+id/textView"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_chainStyle="packed"
+      app:srcCompat="@drawable/logo" />
+
+  <ProgressBar
+      android:id="@+id/progressLogin"
+      style="?android:attr/progressBarStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:indeterminateTint="#F50087"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textCadastro_loginScreen" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
