@@ -37,6 +37,8 @@ public class SignInActivity extends AppCompatActivity {
 
         //configurações iniciais
         editNome = findViewById(R.id.textInputNome_signIn);
+        editNome.requestFocus();
+
         editEmail = findViewById(R.id.textInputEmail_signIn);
         editSenha = findViewById(R.id.textInputSenha_signIn);
         botaoRegistrar = findViewById(R.id.buttonRegistrar_signIn);
@@ -92,22 +94,8 @@ public class SignInActivity extends AppCompatActivity {
                             String id = Base64Custom.codeBase64(usuario.getEmail());
                             usuario.setId(id);
 
-                            //salva o nome do usuario no firebaseAuth
-                            //FirebaseUsuario.atualizaNomeUsuario(usuario.getNome());
-
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
-
-                            //tenta salvar o usuario no banco de dados
-                            try{
-                                String userId = Base64Custom.codeBase64(usuario.getEmail());
-                                usuario.setId(userId);
-                                //Quando desejar salvar no firebase, implementar o método dentro da classe User e chamar a função
-                                //user.salvarNoFirebase();
-
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
                         }else{
                             progressBar.setVisibility(View.GONE);
                             String exception;

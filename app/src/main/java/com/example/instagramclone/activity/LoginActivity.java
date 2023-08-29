@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.helper.ConfiguracaoFirebase;
 import com.example.instagramclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button buttonLogin;
     private TextView textCadastrar;
     private TextInputEditText editEmail, editSenha;
+    private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -32,11 +35,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        /*firebaseAuth = ConfiguracaoFirebase.getFirebaseAuthReference();
+        firebaseAuth.signOut();*/
         //Configurações Iniciais
+        verificarUsuarioLogado();
+
         editEmail = findViewById(R.id.textInputEmail_loginScreen);
+        editEmail.requestFocus();
+
         editSenha = findViewById(R.id.textInputSenha_loginScreen);
         textCadastrar = findViewById(R.id.textCadastro_loginScreen);
         buttonLogin = findViewById(R.id.buttonEntrar_loginScreen);
+        progressBar = findViewById(R.id.progressLogin);
 
         //clicklistener do botao para validar entradas
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +87,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void fazerLogin(Usuario usuario){
+        progressBar.setVisibility(View.VISIBLE);
+        firebaseAuth = ConfiguracaoFirebase.getFirebaseAuthReference();
+
         firebaseAuth.signInWithEmailAndPassword(usuario.getEmail(), usuario.getSenha())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -100,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             Toast.makeText(LoginActivity.this, exception, Toast.LENGTH_SHORT).show();
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
@@ -111,5 +125,11 @@ public class LoginActivity extends AppCompatActivity {
         //chama a main activity
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+    public void verificarUsuarioLogado(){
+        firebaseAuth = ConfiguracaoFirebase.getFirebaseAuthReference();
+        if(firebaseAuth.getCurrentUser() != null){
+            abrirMainActivity();
+        }
     }
 }

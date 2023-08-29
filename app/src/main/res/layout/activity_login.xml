@@ -28,6 +28,7 @@
       android:layout_marginBottom="32dp"
       android:background="@drawable/bg_edittext"
       android:textColorHint="@color/white"
+      app:hintTextColor="@color/white"
       app:layout_constraintBottom_toTopOf="@+id/textView6"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +38,10 @@
         android:id="@+id/textInputEmail_loginScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawablePadding="8dp"
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/dark_gray"
+        android:textColorLink="@color/dark_gray"
+        app:backgroundTint="@color/dark_gray"
         android:hint="@string/digite_email"
         android:inputType="text|textEmailAddress" />
 
@@ -52,6 +56,7 @@
       android:text="@string/naopossuiconta_loginscreen"
       android:textColor="@color/white"
       android:textSize="16sp"
+
       app:layout_constraintBottom_toTopOf="@id/progressLogin"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +71,7 @@
       android:layout_marginBottom="32dp"
       android:background="@drawable/bg_edittext"
       android:textColorHint="@color/white"
+      app:hintTextColor="@color/white"
       app:layout_constraintBottom_toTopOf="@+id/buttonEntrar_loginScreen"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -76,9 +82,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/digite_senha"
-        android:inputType="text|textPassword"
-        tools:layout_editor_absoluteX="7dp"
-        tools:layout_editor_absoluteY="445dp" />
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/dark_gray"
+        android:textColorLink="@color/dark_gray"
+        app:backgroundTint="@color/dark_gray"
+        android:inputType="text|textPassword" />
   </com.google.android.material.textfield.TextInputLayout>
 
   <Button
