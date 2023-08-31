@@ -7,28 +7,16 @@
     android:orientation="vertical">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="0dp"
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         app:itemIconTint="@color/dark_gray"
-        app:itemTextColor="@color/black"
+        app:itemTextColor="@color/dark_gray"
+        app:labelVisibilityMode="selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_bottom_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bnve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        app:itemIconTint="@color/dark_gray"
-        app:itemTextColor="@color/black"
-        app:menu="@menu/menu_bottom_navigation" >
-    </com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx>
-    -->
