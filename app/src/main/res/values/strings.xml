@@ -23,4 +23,8 @@
 
     <!-- menu -->
     <string name="menu_sair">Sair</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_pesquisa">Pesquisa</string>
+    <string name="menu_postagem">Postagem</string>
+    <string name="menu_perfil">Perfil</string>
 </resources>

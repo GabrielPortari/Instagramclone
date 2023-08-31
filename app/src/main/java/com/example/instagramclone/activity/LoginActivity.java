@@ -37,9 +37,9 @@ public class LoginActivity extends AppCompatActivity {
 
         /*firebaseAuth = ConfiguracaoFirebase.getFirebaseAuthReference();
         firebaseAuth.signOut();*/
+
         //Configurações Iniciais
         verificarUsuarioLogado();
-
         editEmail = findViewById(R.id.textInputEmail_loginScreen);
         editEmail.requestFocus();
 
