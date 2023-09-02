@@ -19,7 +19,7 @@
     <string name="registrar_signinscreen">Registrar</string>
 
     <!-- main activity -->
-    <string name="nome_usuario">Nome usuario</string>
+    <string name="nome_usuario">Nome do usuário</string>
 
     <!-- menu -->
     <string name="menu_sair">Sair</string>
@@ -29,4 +29,16 @@
     <string name="menu_perfil">Perfil</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Fragment perfil -->
+    <string name="publicacoes_perfil">Publicações</string>
+    <string name="seguidores_perfil">Seguidores</string>
+    <string name="seguindo_perfil">Seguindo</string>
+    <string name="qt_seguidores_perfil">0</string>
+    <string name="editar_perfil">Editar perfil</string>
+    
+    <!-- Editar perfil activity -->
+    <string name="alterar_foto">Alterar foto</string>
+    <string name="salvar_alteracoes">Salvar alterações</string>
+
 </resources>

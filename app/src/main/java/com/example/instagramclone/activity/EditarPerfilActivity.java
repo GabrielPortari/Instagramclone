@@ -1,0 +1,24 @@
+package com.example.instagramclone.activity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.os.Bundle;
+
+import com.example.instagramclone.R;
+
+public class EditarPerfilActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_editar_perfil);
+        //Configuração Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
+        toolbar.setTitle("Editar perfil");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_close_24);
+
+    }
+}

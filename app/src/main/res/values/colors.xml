@@ -6,5 +6,5 @@
 
     <color name="colorPrimary">@color/white</color>
     <color name="colorPrimaryDark">#462759</color>
-    <color name="colorAccent">#FF2A75</color>
+    <color name="colorAccent">#A03D89</color>
 </resources>
