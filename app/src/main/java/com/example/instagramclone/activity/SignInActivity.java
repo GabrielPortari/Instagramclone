@@ -86,16 +86,21 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            progressBar.setVisibility(View.GONE);
-                            Log.i("AUTH", "Cadastro de usuário completo");
-                            Toast.makeText(SignInActivity.this, "Cadastro completo com sucesso", Toast.LENGTH_SHORT).show();
+                            try {
+                                progressBar.setVisibility(View.GONE);
 
-                            //recupera o email em base64 para usar como identificador
-                            String id = Base64Custom.codeBase64(usuario.getEmail());
-                            usuario.setId(id);
+                                //Salvar dados no firebase
+                                String idUsuario = task.getResult().getUser().getUid();
+                                usuario.setId(idUsuario);
+                                usuario.salvarNoFirebase();
 
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            finish();
+                                Log.i("AUTH", "Cadastro de usuário completo");
+                                Toast.makeText(SignInActivity.this, "Cadastro completo com sucesso", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                finish();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                         }else{
                             progressBar.setVisibility(View.GONE);
                             String exception;

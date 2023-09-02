@@ -1,5 +1,9 @@
 package com.example.instagramclone.model;
 
+import com.example.instagramclone.helper.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+
 public class Usuario {
     private String nome;
     private String email;
@@ -18,6 +22,11 @@ public class Usuario {
         return foto;
     }
 
+    public void salvarNoFirebase(){
+        DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
+        DatabaseReference userRef = databaseReference.child("usuarios").child(getId());
+        userRef.setValue(this);
+    }
     public void setFoto(String foto) {
         this.foto = foto;
     }
@@ -42,6 +51,7 @@ public class Usuario {
         this.email = email;
     }
 
+    @Exclude
     public String getSenha() {
         return senha;
     }
