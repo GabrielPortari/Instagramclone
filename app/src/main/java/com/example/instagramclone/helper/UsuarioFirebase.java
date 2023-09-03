@@ -1,5 +1,6 @@
 package com.example.instagramclone.helper;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,11 @@ public class UsuarioFirebase {
         //retorna o usuario logado
         FirebaseAuth firebaseAuth = ConfiguracaoFirebase.getFirebaseAuthReference();
         return firebaseAuth.getCurrentUser();
+    }
+
+    public static String getIdUsuario(){
+        FirebaseUser firebaseUser = getUsuarioLogado();
+        return firebaseUser.getUid();
     }
 
     public static Usuario getDadosUsuarioLogado(){
@@ -49,7 +55,31 @@ public class UsuarioFirebase {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(!task.isSuccessful()){
-                        Log.d("PERFIL", "Erro ao atualizar perfil");
+                        Log.d("PERFIL", "Erro ao atualizar nome do perfil");
+                    }
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static void atualizarFotoUsuario(Uri url){
+        try{
+            //recupera o usuario logado
+            FirebaseUser usuarioLogado = getUsuarioLogado();
+
+            //utiliza o profile change request pra buildar o novo perfil
+            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest
+                    .Builder()
+                    .setPhotoUri(url)
+                    .build();
+
+            //apos recuperar o usuario logado, utiliza o update profile para atualizar no firebase
+            usuarioLogado.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(!task.isSuccessful()){
+                        Log.d("PERFIL", "Erro ao atualizar foto de perfil");
                     }
                 }
             });
