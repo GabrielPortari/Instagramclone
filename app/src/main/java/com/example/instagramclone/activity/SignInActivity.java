@@ -12,8 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.instagramclone.R;
-import com.example.instagramclone.helper.Base64Custom;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
+import com.example.instagramclone.helper.UsuarioFirebase;
 import com.example.instagramclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,16 +35,9 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        //configurações iniciais
-        editNome = findViewById(R.id.textInputNome_signIn);
-        editNome.requestFocus();
+        //inicia os componentes de interface
+        configuracoesIniciais();
 
-        editEmail = findViewById(R.id.textInputEmail_signIn);
-        editSenha = findViewById(R.id.textInputSenha_signIn);
-        botaoRegistrar = findViewById(R.id.buttonRegistrar_signIn);
-        progressBar = findViewById(R.id.progressSignIn);
-
-        progressBar.setVisibility(View.GONE);
         botaoRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +45,16 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
     }
-
+    public void configuracoesIniciais(){
+        //configurações iniciais
+        editNome = findViewById(R.id.textInputNome_signIn);
+        editNome.requestFocus();
+        editEmail = findViewById(R.id.textInputEmail_signIn);
+        editSenha = findViewById(R.id.textInputSenha_signIn);
+        botaoRegistrar = findViewById(R.id.buttonRegistrar_signIn);
+        progressBar = findViewById(R.id.progressSignIn);
+        progressBar.setVisibility(View.GONE);
+    }
     public void validarCadastro(View view){
         String textNome = editNome.getText().toString();
         String textEmail = editEmail.getText().toString();
@@ -89,10 +91,13 @@ public class SignInActivity extends AppCompatActivity {
                             try {
                                 progressBar.setVisibility(View.GONE);
 
-                                //Salvar dados no firebase
+                                //Salvar dados no firebase database
                                 String idUsuario = task.getResult().getUser().getUid();
                                 usuario.setId(idUsuario);
                                 usuario.salvarNoFirebase();
+
+                                //salva o nome do usuario no profile do auth
+                                UsuarioFirebase.atualizarNomeUsuario(usuario.getNome());
 
                                 Log.i("AUTH", "Cadastro de usuário completo");
                                 Toast.makeText(SignInActivity.this, "Cadastro completo com sucesso", Toast.LENGTH_SHORT).show();

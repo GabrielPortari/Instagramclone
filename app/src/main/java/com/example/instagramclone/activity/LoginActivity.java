@@ -35,18 +35,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /*firebaseAuth = ConfiguracaoFirebase.getFirebaseAuthReference();
-        firebaseAuth.signOut();*/
-
-        //Configurações Iniciais
+        //verifica se tem usuario logado, caso possua skipa esta tela
         verificarUsuarioLogado();
-        editEmail = findViewById(R.id.textInputEmail_loginScreen);
-        editEmail.requestFocus();
 
-        editSenha = findViewById(R.id.textInputSenha_loginScreen);
-        textCadastrar = findViewById(R.id.textCadastro_loginScreen);
-        buttonLogin = findViewById(R.id.buttonEntrar_loginScreen);
-        progressBar = findViewById(R.id.progressLogin);
+        //inicia os componentes da interface
+        configuracoesIniciais();
 
         //clicklistener do botao para validar entradas
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +57,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
+    public void configuracoesIniciais(){
+        //configurações Iniciais
+        editEmail = findViewById(R.id.textInputEmail_loginScreen);
+        editEmail.requestFocus();
+        editSenha = findViewById(R.id.textInputSenha_loginScreen);
+        textCadastrar = findViewById(R.id.textCadastro_loginScreen);
+        buttonLogin = findViewById(R.id.buttonEntrar_loginScreen);
+        progressBar = findViewById(R.id.progressLogin);
+    }
     public void validarAutenticacao(View view){
         //recupera email e senha dos edittext
         String textEmail = editEmail.getText().toString();
