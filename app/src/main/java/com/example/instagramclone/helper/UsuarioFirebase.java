@@ -25,7 +25,7 @@ public class UsuarioFirebase {
         usuario.setEmail(firebaseUser.getEmail());
         usuario.setNome(firebaseUser.getDisplayName());
         usuario.setId(firebaseUser.getUid());
-        if(!firebaseUser.getPhotoUrl().toString().isEmpty()){
+        if(firebaseUser.getPhotoUrl() != null){
             usuario.setFoto(firebaseUser.getPhotoUrl().toString());
         }else{
             usuario.setFoto("");

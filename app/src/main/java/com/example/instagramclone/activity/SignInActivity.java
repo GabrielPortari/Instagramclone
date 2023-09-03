@@ -94,6 +94,7 @@ public class SignInActivity extends AppCompatActivity {
                                 //Salvar dados no firebase database
                                 String idUsuario = task.getResult().getUser().getUid();
                                 usuario.setId(idUsuario);
+                                usuario.setFoto("");
                                 usuario.salvarNoFirebase();
 
                                 //salva o nome do usuario no profile do auth
