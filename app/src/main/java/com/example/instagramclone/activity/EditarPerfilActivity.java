@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.helper.ConfiguracaoFirebase;
 import com.example.instagramclone.helper.UsuarioFirebase;
+import com.example.instagramclone.model.Usuario;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -19,6 +23,8 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private TextView textEditarFoto;
     private TextInputEditText editNome, editEmail;
     private Button botaoSalvar;
+    private Usuario usuarioLogado;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +39,30 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
         //inicia os componentes de interface
         configuracoesIniciais();
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
 
         //recuperar usuario atual
-        FirebaseUser usuarioLogado = UsuarioFirebase.getUsuarioLogado();
+        FirebaseUser firebaseUser = UsuarioFirebase.getUsuarioLogado();
+        editNome.setText(firebaseUser.getDisplayName());
+        editEmail.setText(firebaseUser.getEmail());
 
-        editNome.setText(usuarioLogado.getDisplayName());
-        editEmail.setText(usuarioLogado.getEmail());
+        botaoSalvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nomeAtualizado = editNome.getText().toString();
+                if(nomeAtualizado.isEmpty()){
+                    Toast.makeText(EditarPerfilActivity.this, "Preencha o campo nome antes de continuar", Toast.LENGTH_SHORT).show();
+                }else{
+                    //atualizar nome do usuario no auth
+                    UsuarioFirebase.atualizarNomeUsuario(nomeAtualizado);
+
+                    //atualizar nome do usuario no database
+                    usuarioLogado.setNome(nomeAtualizado);
+                    usuarioLogado.atualizarNoFirebase();
+                    Toast.makeText(EditarPerfilActivity.this, "Dados alterados com sucesso", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 
@@ -49,5 +73,11 @@ public class EditarPerfilActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editTextEmailEditarPerfil);
         editEmail.setFocusable(false);
         botaoSalvar = findViewById(R.id.buttonSalvarEditarPerfil);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return false;
     }
 }

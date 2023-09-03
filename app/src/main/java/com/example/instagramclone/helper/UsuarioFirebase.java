@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.instagramclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +17,22 @@ public class UsuarioFirebase {
         FirebaseAuth firebaseAuth = ConfiguracaoFirebase.getFirebaseAuthReference();
         return firebaseAuth.getCurrentUser();
     }
+
+    public static Usuario getDadosUsuarioLogado(){
+        FirebaseUser firebaseUser = getUsuarioLogado();
+
+        Usuario usuario = new Usuario();
+        usuario.setEmail(firebaseUser.getEmail());
+        usuario.setNome(firebaseUser.getDisplayName());
+        usuario.setId(firebaseUser.getUid());
+        if(!firebaseUser.getPhotoUrl().toString().isEmpty()){
+            usuario.setFoto(firebaseUser.getPhotoUrl().toString());
+        }else{
+            usuario.setFoto("");
+        }
+        return usuario;
+    }
+
     public static void atualizarNomeUsuario(String nome){
         try{
             //recupera o usuario logado
