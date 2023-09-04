@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Usuario {
     private String nome;
+    private String nome_minusculo;
     private String email;
     private String senha;
     private String id;
@@ -34,12 +35,13 @@ public class Usuario {
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
         DatabaseReference userRef = databaseReference.child("usuarios").child(getId());
 
-        userRef.updateChildren(getMap());
+        userRef.updateChildren(recuperarMap());
     }
-    public Map<String, Object> getMap(){
+    public Map<String, Object> recuperarMap(){
         HashMap<String, Object> usuarioMap = new HashMap<>();
 
         usuarioMap.put("nome", getNome());
+        usuarioMap.put("nome_minusculo", getNome_minusculo());
         usuarioMap.put("email", getEmail());
         usuarioMap.put("id", getId());
         usuarioMap.put("foto", getFoto());
@@ -60,8 +62,11 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
+        this.nome_minusculo = nome.toLowerCase();
     }
-
+    public String getNome_minusculo(){
+        return this.nome_minusculo;
+    }
     public String getEmail() {
         return email;
     }
