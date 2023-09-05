@@ -1,5 +1,6 @@
 package com.example.instagramclone.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,15 +13,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.activity.PerfilVisitadoActivity;
 import com.example.instagramclone.adapter.AdapterPesquisa;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
+import com.example.instagramclone.helper.RecyclerItemClickListener;
 import com.example.instagramclone.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -51,6 +54,28 @@ public class PesquisaFragment extends Fragment {
         recyclerPesquisa.setLayoutManager(layoutManager);
         recyclerPesquisa.setAdapter(adapterPesquisa);
 
+        //configuracoes do recycler item clicklistener
+        recyclerPesquisa.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerPesquisa, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Usuario usuarioSelecionado = listaUsuarioPesquisa.get(position);
+
+                Intent intent = new Intent(getActivity(), PerfilVisitadoActivity.class);
+                intent.putExtra("usuarioSelecionado", usuarioSelecionado);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
+
         //configuracoes do searchview
         searchView.setQueryHint("Buscar usuario");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -71,7 +96,6 @@ public class PesquisaFragment extends Fragment {
                 return true;
             }
         });
-
 
         return view;
     }

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,7 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class PerfilFragment extends Fragment {
     private TextView textPublicacoes, textSeguidores, textSeguindo;
     private CircleImageView circleImagePerfil;
-    private Button buttonEditarPerfil;
+    private Button buttonAcaoPerfil;
     private GridView gridView;
     private ProgressBar progressBar;
 
@@ -35,11 +34,11 @@ public class PerfilFragment extends Fragment {
         textSeguidores = view.findViewById(R.id.textSeguidoresPerfil);
         textSeguindo = view.findViewById(R.id.textSeguindoPerfil);
         circleImagePerfil = view.findViewById(R.id.circleImageViewPerfil);
-        buttonEditarPerfil = view.findViewById(R.id.buttonEditarPerfil);
+        buttonAcaoPerfil = view.findViewById(R.id.buttonAcaoPerfil);
         gridView = view.findViewById(R.id.gridViewPerfil);
         progressBar = view.findViewById(R.id.progressBarPerfil);
 
-        buttonEditarPerfil.setOnClickListener(new View.OnClickListener() {
+        buttonAcaoPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), EditarPerfilActivity.class));
