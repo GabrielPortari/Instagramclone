@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.instagramclone.R;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
+import com.example.instagramclone.helper.Permissao;
 import com.example.instagramclone.helper.UsuarioFirebase;
 import com.example.instagramclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,6 +47,9 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private Button botaoSalvar;
     private Usuario usuarioLogado;
     private String idUser;
+    private String[] permissoes = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     private StorageReference storageReference;
     private FirebaseUser firebaseUser;
@@ -63,6 +68,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
         //inicia os componentes de interface
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         configuracoesIniciais();
+        Permissao.validarPermissoes(permissoes, this, 1);
 
         //recuperar usuario atual
         firebaseUser = UsuarioFirebase.getUsuarioLogado();
@@ -114,6 +120,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editTextEmailEditarPerfil);
         editEmail.setFocusable(false);
         botaoSalvar = findViewById(R.id.buttonSalvarEditarPerfil);
+        idUser = UsuarioFirebase.getIdUsuario();
     }
 
     private ActivityResultLauncher<Intent> galeriaActivityResult = registerForActivityResult(
@@ -142,7 +149,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
                                 StorageReference imagemRef = storageReference
                                         .child("imagens")
                                         .child("perfil")
-                                        .child(UsuarioFirebase.getIdUsuario() + ".jpeg");
+                                        .child(idUser + ".jpeg");
 
                                 UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
                                 uploadTask.addOnFailureListener(new OnFailureListener() {
