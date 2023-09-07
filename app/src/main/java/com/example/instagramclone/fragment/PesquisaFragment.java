@@ -20,6 +20,7 @@ import com.example.instagramclone.activity.PerfilVisitadoActivity;
 import com.example.instagramclone.adapter.AdapterPesquisa;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
 import com.example.instagramclone.helper.RecyclerItemClickListener;
+import com.example.instagramclone.helper.UsuarioFirebase;
 import com.example.instagramclone.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +37,7 @@ public class PesquisaFragment extends Fragment {
     private DatabaseReference databaseReference;
     private List<Usuario> listaUsuarioPesquisa;
     private AdapterPesquisa adapterPesquisa;
+    private String idUsuarioLogado;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class PesquisaFragment extends Fragment {
         searchView = view.findViewById(R.id.searchPesquisa);
         listaUsuarioPesquisa = new ArrayList<>();
         databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference().child("usuarios");
+        idUsuarioLogado = UsuarioFirebase.getIdUsuario();
     }
     private void pesquisarUsuario(String s){
         //limpa a lista a cada letra digitada
@@ -120,7 +123,10 @@ public class PesquisaFragment extends Fragment {
                     //limpa a lista a cada letra digitada
                     listaUsuarioPesquisa.clear();
                     for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        listaUsuarioPesquisa.add(dataSnapshot.getValue(Usuario.class));
+                        Usuario usuario = dataSnapshot.getValue(Usuario.class);
+                        if(!usuario.getId().equals(idUsuarioLogado)){
+                            listaUsuarioPesquisa.add(usuario);
+                        }
                     }
                     adapterPesquisa.notifyDataSetChanged();
                     int tam_lista = listaUsuarioPesquisa.size();

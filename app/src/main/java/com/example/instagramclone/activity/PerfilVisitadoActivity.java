@@ -105,6 +105,26 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
         //altera o botao seguir para seguindo
         buttonAcaoPerfil.setText("SEGUINDO");
         buttonAcaoPerfil.setOnClickListener(null);
+
+        //incrementar os seguindo do usuario logado
+        int seguindo = usuarioLogado.getSeguindo()+1;
+
+        DatabaseReference atualizaSeguindo = usuariosReference.child(usuarioLogado.getId());
+
+        HashMap<String, Object> dadosSeguindo = new HashMap<>();
+        dadosSeguindo.put("seguindo", seguindo);
+
+        atualizaSeguindo.updateChildren(dadosSeguindo);
+
+        //incrementar os seguidores do usuario buscado
+        int seguidores = usuarioSelecionado.getSeguidores()+1;
+
+        DatabaseReference atualizaSeguidores = usuariosReference.child(usuarioSelecionado.getId());
+
+        HashMap<String, Object> dadosSeguidores = new HashMap<>();
+        dadosSeguidores.put("seguidores", seguidores);
+
+        atualizaSeguidores.updateChildren(dadosSeguidores);
     }
 
     private void recuperaDadosUsuarioLogado(){
