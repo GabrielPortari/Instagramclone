@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.instagramclone.R;
 import com.example.instagramclone.activity.EditarPerfilActivity;
+import com.example.instagramclone.activity.FiltroActivity;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
 import com.example.instagramclone.helper.Permissao;
 import com.example.instagramclone.helper.UsuarioFirebase;
@@ -82,6 +83,14 @@ public class PostagemFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
+                        Bitmap imagem = null;
+                        try{
+                            Uri urlImagemSelecionada = result.getData().getData();
+                            imagem = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), urlImagemSelecionada);
+                            enviarImagem(imagem);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
 
                     }
                 }
@@ -94,9 +103,25 @@ public class PostagemFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
-
+                        Bitmap imagem = null;
+                        try {
+                            imagem = (Bitmap) result.getData().getExtras().get("data");
+                            enviarImagem(imagem);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
     );
+    private void enviarImagem(Bitmap imagem){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        byte[] dadosImagem = baos.toByteArray();
+
+        Intent intent = new Intent(getActivity(), FiltroActivity.class);
+        intent.putExtra("imagemEscolhida", imagem);
+        startActivity(intent);
+
+    }
 }
