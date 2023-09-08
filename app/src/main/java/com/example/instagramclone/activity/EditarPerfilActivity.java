@@ -46,6 +46,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
     private TextInputEditText editNome, editEmail;
     private Button botaoSalvar;
     private Usuario usuarioLogado;
+    private Toolbar toolbar;
     private String idUser;
     private String[] permissoes = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE
@@ -58,17 +59,11 @@ public class EditarPerfilActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_perfil);
-        //configuração Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbarPrincipal);
-        toolbar.setTitle("Editar perfil");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_close_24);
-
-        //inicia os componentes de interface
+                //inicia os componentes de interface
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         configuracoesIniciais();
-        Permissao.validarPermissoes(permissoes, this, 1);
+
+        //Permissao.validarPermissoes(permissoes, this, 1);
 
         //recuperar usuario atual
         firebaseUser = UsuarioFirebase.getUsuarioLogado();
@@ -121,6 +116,13 @@ public class EditarPerfilActivity extends AppCompatActivity {
         editEmail.setFocusable(false);
         botaoSalvar = findViewById(R.id.buttonSalvarEditarPerfil);
         idUser = UsuarioFirebase.getIdUsuario();
+
+        //Configuracoes da toolbar
+        toolbar = findViewById(R.id.toolbarPrincipal);
+        toolbar.setTitle("Editar perfil");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_close_24);
     }
 
     private ActivityResultLauncher<Intent> galeriaActivityResult = registerForActivityResult(

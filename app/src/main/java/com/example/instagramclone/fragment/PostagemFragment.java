@@ -50,7 +50,7 @@ public class PostagemFragment extends Fragment {
 
         configuracoesIniciais(view);
 
-        Permissao.validarPermissoes(permissoes, getActivity(), 1);
+        //Permissao.validarPermissoes(permissoes, getActivity(), 1);
 
         botaoCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,8 +120,7 @@ public class PostagemFragment extends Fragment {
         byte[] dadosImagem = baos.toByteArray();
 
         Intent intent = new Intent(getActivity(), FiltroActivity.class);
-        intent.putExtra("imagemEscolhida", imagem);
+        intent.putExtra("imagemEscolhida", dadosImagem);
         startActivity(intent);
-
     }
 }
