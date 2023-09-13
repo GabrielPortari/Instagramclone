@@ -46,5 +46,6 @@
     
     <!-- Filtro activity -->
     <string name="descricao_filtro">Descrição</string>
+    <string name="filtro_nome">Nome Filtro</string>
 
 </resources>
