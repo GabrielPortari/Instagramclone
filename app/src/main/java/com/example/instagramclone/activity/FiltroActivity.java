@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,17 +13,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagramclone.R;
 import com.example.instagramclone.adapter.AdapterFiltroMiniatura;
+import com.example.instagramclone.helper.ConfiguracaoFirebase;
 import com.example.instagramclone.helper.FilterCustom;
 import com.example.instagramclone.helper.RecyclerItemClickListener;
+import com.example.instagramclone.helper.UsuarioFirebase;
+import com.example.instagramclone.model.Postagem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.zomato.photofilters.SampleFilters;
 import com.zomato.photofilters.imageprocessors.Filter;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +48,14 @@ public class FiltroActivity extends AppCompatActivity {
     private ImageView imagemEscolhida;
     private Bitmap imagem, imagemFiltro;
     private Toolbar toolbar;
-    private List<FilterCustom> listaFiltros;
+    private TextInputEditText editTextDescricao;
 
     private AdapterFiltroMiniatura adapterFiltroMiniatura;
     private RecyclerView recyclerFiltroMiniatura;
+
+    private List<FilterCustom> listaFiltros;
+    private String idUsuarioLogado;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +70,7 @@ public class FiltroActivity extends AppCompatActivity {
             byte[] dadosImagem = bundle.getByteArray("imagemEscolhida");
             imagem = BitmapFactory.decodeByteArray(dadosImagem, 0, dadosImagem.length);
             imagemEscolhida.setImageBitmap(imagem);
+            imagemFiltro = imagem.copy(imagem.getConfig(), true);
 
             //configuracoes recyclerview e adapter
             adapterFiltroMiniatura = new AdapterFiltroMiniatura(listaFiltros, imagem, getApplicationContext());
@@ -87,7 +106,6 @@ public class FiltroActivity extends AppCompatActivity {
                             }
                     )
             );
-
             //recuperar filtros
             recuperarFiltros();
         }
@@ -97,8 +115,11 @@ public class FiltroActivity extends AppCompatActivity {
     private void configuracoesIniciais(){
         imagemEscolhida = findViewById(R.id.imageEscolhidaFiltro);
         recyclerFiltroMiniatura = findViewById(R.id.recyclerFiltro);
+        editTextDescricao = findViewById(R.id.inputEditTextDescricaoFiltro);
+
 
         listaFiltros = new ArrayList<>();
+        idUsuarioLogado = UsuarioFirebase.getIdUsuario();
 
         //configurações da toolbar
         toolbar = findViewById(R.id.toolbarPrincipal);
@@ -134,7 +155,52 @@ public class FiltroActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.menu_publicar){
             //publicar a imagem
+            publicarPostagem();
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void publicarPostagem(){
+
+        Postagem postagem = new Postagem();
+        String descricao = editTextDescricao.getText().toString();
+        String idPostagem = postagem.getIdPostagem();
+
+        postagem.setIdUsuario(idUsuarioLogado);
+        postagem.setDescricao(descricao);
+
+        //recupera dados da imagem para o firebase
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        imagemFiltro.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+        byte[] dadosImagem = byteArrayOutputStream.toByteArray();
+
+        //salvar imagem no storage
+        StorageReference storageReference = ConfiguracaoFirebase.getFirebaseStorageReference();
+        StorageReference imagensReference = storageReference
+                .child("imagens")
+                        .child("postagens")
+                                .child(idPostagem + ".jpeg");
+
+        UploadTask uploadTask = imagensReference.putBytes(dadosImagem);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(FiltroActivity.this, "Ocorreu um erro ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imagensReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        Uri url = task.getResult();
+                        postagem.setCaminhoImagem(url.toString());
+                        if(postagem.salvarPostagemNoFirebase()){
+                            Toast.makeText(FiltroActivity.this, "Sucesso ao salvar postagem", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                });
+            }
+        });
     }
 }
