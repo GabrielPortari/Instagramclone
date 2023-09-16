@@ -13,12 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagramclone.R;
 import com.example.instagramclone.adapter.AdapterFiltroMiniatura;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
@@ -26,11 +28,16 @@ import com.example.instagramclone.helper.FilterCustom;
 import com.example.instagramclone.helper.RecyclerItemClickListener;
 import com.example.instagramclone.helper.UsuarioFirebase;
 import com.example.instagramclone.model.Postagem;
+import com.example.instagramclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.zomato.photofilters.SampleFilters;
@@ -49,19 +56,25 @@ public class FiltroActivity extends AppCompatActivity {
     private Bitmap imagem, imagemFiltro;
     private Toolbar toolbar;
     private TextInputEditText editTextDescricao;
-
     private AdapterFiltroMiniatura adapterFiltroMiniatura;
     private RecyclerView recyclerFiltroMiniatura;
+    private ProgressBar progressBar;
 
     private List<FilterCustom> listaFiltros;
     private String idUsuarioLogado;
+    private Usuario usuarioLogado;
+    private boolean carregandoEstado;
 
+    private DatabaseReference usuariosReference;
+    private DatabaseReference usuarioLogadoReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtro);
         configuracoesIniciais();
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
+        recuperarDadosUsuarioLogado();
 
         //recupera os dados passados da outra intent
         Bundle bundle = getIntent().getExtras();
@@ -71,6 +84,7 @@ public class FiltroActivity extends AppCompatActivity {
             imagem = BitmapFactory.decodeByteArray(dadosImagem, 0, dadosImagem.length);
             imagemEscolhida.setImageBitmap(imagem);
             imagemFiltro = imagem.copy(imagem.getConfig(), true);
+
 
             //configuracoes recyclerview e adapter
             adapterFiltroMiniatura = new AdapterFiltroMiniatura(listaFiltros, imagem, getApplicationContext());
@@ -113,10 +127,13 @@ public class FiltroActivity extends AppCompatActivity {
     }
 
     private void configuracoesIniciais(){
+        usuariosReference = ConfiguracaoFirebase.getFirebaseDatabaseReference()
+                .child("usuarios");
+
         imagemEscolhida = findViewById(R.id.imageEscolhidaFiltro);
         recyclerFiltroMiniatura = findViewById(R.id.recyclerFiltro);
         editTextDescricao = findViewById(R.id.inputEditTextDescricaoFiltro);
-
+        progressBar = findViewById(R.id.progressBarFiltro);
 
         listaFiltros = new ArrayList<>();
         idUsuarioLogado = UsuarioFirebase.getIdUsuario();
@@ -129,6 +146,31 @@ public class FiltroActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_close_24);
     }
 
+    private void carregando (boolean estado){
+        if(estado){
+            carregandoEstado = true;
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            carregandoEstado = false;
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+    private void recuperarDadosUsuarioLogado(){
+        carregando(true);
+        usuarioLogadoReference = usuariosReference.child(idUsuarioLogado);
+        usuarioLogadoReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                usuarioLogado = snapshot.getValue(Usuario.class);
+                carregando(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     @Override
     public boolean onSupportNavigateUp() {
         finish();
@@ -155,13 +197,16 @@ public class FiltroActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.menu_publicar){
             //publicar a imagem
-            publicarPostagem();
+            if(!carregandoEstado){
+                publicarPostagem();
+            }else{
+                Toast.makeText(this, "Carregando, aguarde", Toast.LENGTH_SHORT).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
     private void publicarPostagem(){
-
-        Postagem postagem = new Postagem();
+        final Postagem postagem = new Postagem();
         String descricao = editTextDescricao.getText().toString();
         String idPostagem = postagem.getIdPostagem();
 
@@ -195,6 +240,10 @@ public class FiltroActivity extends AppCompatActivity {
                         Uri url = task.getResult();
                         postagem.setCaminhoImagem(url.toString());
                         if(postagem.salvarPostagemNoFirebase()){
+                            //atualizar quantidade de postagens
+                            int qtPostagens = usuarioLogado.getPostagens() + 1;
+                            usuarioLogado.setPostagens(qtPostagens);
+                            usuarioLogado.atualizarQuantidadePostagens();
                             Toast.makeText(FiltroActivity.this, "Sucesso ao salvar postagem", Toast.LENGTH_SHORT).show();
                             finish();
                         }

@@ -35,6 +35,16 @@ public class Usuario implements Serializable {
         DatabaseReference userRef = databaseReference.child("usuarios").child(getId());
         userRef.setValue(this);
     }
+    public void atualizarQuantidadePostagens(){
+        DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
+        DatabaseReference userRef = databaseReference.child("usuarios").child(getId());
+
+        HashMap<String, Object> postagemMap = new HashMap<>();
+        postagemMap.put("postagens", getPostagens());
+        userRef.updateChildren(postagemMap);
+
+        userRef.updateChildren(recuperarMap());
+    }
     public void atualizarNoFirebase(){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
         DatabaseReference userRef = databaseReference.child("usuarios").child(getId());

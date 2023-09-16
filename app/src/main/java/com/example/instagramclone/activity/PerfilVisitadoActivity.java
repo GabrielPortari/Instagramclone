@@ -37,7 +37,7 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PerfilVisitadoActivity extends AppCompatActivity {
-    private TextView textPublicacoes, textSeguidores, textSeguindo;
+    private TextView textPostagens, textSeguidores, textSeguindo;
     private CircleImageView circleImagePerfil;
     private Button buttonAcaoPerfil;
     private GridView gridView;
@@ -88,7 +88,7 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
         idUsuarioLogado = UsuarioFirebase.getIdUsuario();
 
         toolbar = findViewById(R.id.toolbarPrincipal);
-        textPublicacoes = findViewById(R.id.textPublicacoesPerfil);
+        textPostagens = findViewById(R.id.textPublicacoesPerfil);
         textSeguidores = findViewById(R.id.textSeguidoresPerfil);
         textSeguindo = findViewById(R.id.textSeguindoPerfil);
         circleImagePerfil = findViewById(R.id.circleImageViewPerfil);
@@ -227,8 +227,6 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
                     Postagem postagem = ds.getValue(Postagem.class);
                     urlImagens.add(postagem.getCaminhoImagem());
                 }
-                int qtPublicacoes = urlImagens.size();
-                textPublicacoes.setText(String.valueOf(qtPublicacoes));
 
                 //configuracoes do gridview para listar imagens
                 adapterGridView = new AdapterGridView(getApplicationContext(), R.layout.item_gridview_postagem, urlImagens);
@@ -252,10 +250,12 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
                 //String postagens = String.valueOf(usuario.getPostagens());
                 String seguindo = String.valueOf(usuario.getSeguindo());
                 String seguidores = String.valueOf(usuario.getSeguidores());
+                String postagens = String.valueOf(usuario.getPostagens());
 
                 //textPublicacoes.setText(postagens);
                 textSeguindo.setText(seguindo);
                 textSeguidores.setText(seguidores);
+                textPostagens.setText(postagens);
             }
 
             @Override
