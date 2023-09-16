@@ -38,7 +38,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    //Firebase implementations
+    //implementações do firebase
     implementation platform('com.google.firebase:firebase-bom:32.2.2')
     implementation 'com.google.firebase:firebase-database:20.2.2'
     implementation 'com.google.firebase:firebase-auth:22.1.1'
@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:8.0.2'
 
     //Outras bibliotecas
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.github.zomato:androidphotofilters:1.0.2'
+    implementation 'de.hdodenhof:circleimageview:3.1.0' //circle image view
+    implementation 'com.github.zomato:androidphotofilters:1.0.2' //filtros para imagens
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5' //universal image loader
 }
