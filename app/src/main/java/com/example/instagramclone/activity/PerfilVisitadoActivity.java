@@ -138,15 +138,15 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
         /* Estrutura
         * seguidores
         *     .id_usuario
-        *         .id_usuario_buscado
+        *         .id_usuario_seguido
         *             .dados_usuario_buscado
         */
         HashMap<String, Object> dadosPerfilBuscado = new HashMap<>();
-        dadosPerfilBuscado.put("nome", usuarioSelecionado.getNome());
-        dadosPerfilBuscado.put("foto", usuarioSelecionado.getFoto());
+        dadosPerfilBuscado.put("nome", usuarioLogado.getNome());
+        dadosPerfilBuscado.put("foto", usuarioLogado.getFoto());
         DatabaseReference seguidorReference = seguidoresReference
-                .child(usuarioLogado.getId())
-                .child(usuarioSelecionado.getId());
+                .child(usuarioSelecionado.getId())
+                .child(usuarioLogado.getId());
 
         //salva a estrutura de seguir no firebase
         seguidorReference.setValue(dadosPerfilBuscado);
@@ -157,22 +157,16 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
 
         //incrementar os seguindo do usuario logado
         int seguindo = usuarioLogado.getSeguindo()+1;
-
         DatabaseReference atualizaSeguindo = usuariosReference.child(usuarioLogado.getId());
-
         HashMap<String, Object> dadosSeguindo = new HashMap<>();
         dadosSeguindo.put("seguindo", seguindo);
-
         atualizaSeguindo.updateChildren(dadosSeguindo);
 
         //incrementar os seguidores do usuario buscado
         int seguidores = usuarioSelecionado.getSeguidores()+1;
-
         DatabaseReference atualizaSeguidores = usuariosReference.child(usuarioSelecionado.getId());
-
         HashMap<String, Object> dadosSeguidores = new HashMap<>();
         dadosSeguidores.put("seguidores", seguidores);
-
         atualizaSeguidores.updateChildren(dadosSeguidores);
     }
 
@@ -197,8 +191,8 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
 
     private void verificarSeSegueUsuario(){
         DatabaseReference seguidorReference = seguidoresReference
-                .child(idUsuarioLogado)
-                .child(usuarioSelecionado.getId());
+                .child(usuarioSelecionado.getId())
+                .child(idUsuarioLogado);
 
         seguidorReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
