@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ProgressBar;
@@ -55,6 +57,7 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
     private ValueEventListener listenerPerfilAmigo;
 
     private String idUsuarioLogado;
+    private List<Postagem> postagemLista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +83,25 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
         inicializarImageLoader();
         recuperaDadosUsuarioLogado();
         recuperarPostagensUsuarioVisitado();
+        
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Postagem postagem = postagemLista.get(position);
+
+                Intent intent = new Intent(getApplicationContext(), VisualizarPostagemActivity.class);
+                intent.putExtra("postagem", postagem);
+                intent.putExtra("usuarioSelecionado", usuarioSelecionado);
+                startActivity(intent);
+            }
+        });
     }
 
     public void configuracoesIniciais(){
         usuariosReference = ConfiguracaoFirebase.getFirebaseDatabaseReference().child("usuarios");
         seguidoresReference = ConfiguracaoFirebase.getFirebaseDatabaseReference().child("seguidores");
         idUsuarioLogado = UsuarioFirebase.getIdUsuario();
+        postagemLista = new ArrayList<>();
 
         toolbar = findViewById(R.id.toolbarPrincipal);
         textPostagens = findViewById(R.id.textPublicacoesPerfil);
@@ -103,6 +119,7 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
 
         buttonAcaoPerfil.setText("...");
     }
+
     private void habilitarBotaoSeguir(boolean seguindo){
         if(seguindo){
             buttonAcaoPerfil.setText("SEGUINDO");
@@ -158,6 +175,7 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
 
         atualizaSeguidores.updateChildren(dadosSeguidores);
     }
+
     private void recuperaDadosUsuarioLogado(){
         usuarioLogadoReference = usuariosReference.child(idUsuarioLogado);
         usuarioLogadoReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -200,6 +218,7 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
             }
         });
     }
+
     private void inicializarImageLoader(){
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration
                 .Builder(this)
@@ -226,6 +245,7 @@ public class PerfilVisitadoActivity extends AppCompatActivity {
                 for(DataSnapshot ds : snapshot.getChildren()){
                     Postagem postagem = ds.getValue(Postagem.class);
                     urlImagens.add(postagem.getCaminhoImagem());
+                    postagemLista.add(postagem);
                 }
 
                 //configuracoes do gridview para listar imagens

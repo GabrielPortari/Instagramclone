@@ -35,17 +35,22 @@
     <string name="seguindo_perfil">Seguindo</string>
     <string name="qt_seguidores_perfil">0</string>
     <string name="editar_perfil">Editar perfil</string>
-    
+
     <!-- Fragment postagem -->
     <string name="abrir_camera">CÂMERA</string>
     <string name="abrir_galeria">GALERIA</string>
-    
+
     <!-- Editar perfil activity -->
     <string name="alterar_foto">Alterar foto</string>
     <string name="salvar_alteracoes">Salvar alterações</string>
-    
+
     <!-- Filtro activity -->
     <string name="descricao_filtro">Descrição</string>
     <string name="filtro_nome">Nome Filtro</string>
+
+    <!-- visualizar postagem activity -->
+    <string name="curtidas">0 curtidas</string>
+    <string name="visualizar_comentarios">Visualizar comentários</string>
+
 
 </resources>

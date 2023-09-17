@@ -3,7 +3,9 @@ package com.example.instagramclone.model;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
-public class Postagem {
+import java.io.Serializable;
+
+public class Postagem implements Serializable {
     /*
     Modelo de postagem no firebase
     postagens.
