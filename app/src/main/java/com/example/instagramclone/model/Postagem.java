@@ -1,9 +1,13 @@
 package com.example.instagramclone.model;
 
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
+import com.example.instagramclone.helper.UsuarioFirebase;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Postagem implements Serializable {
     /*
@@ -27,13 +31,37 @@ public class Postagem implements Serializable {
         String idPostagem = postagemReference.push().getKey();
         setIdPostagem(idPostagem);
     }
-    public boolean salvarPostagemNoFirebase(){
+    public boolean salvarPostagemNoFirebase(DataSnapshot seguidoresSnapshot){
+        Map object = new HashMap();
+        Usuario usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
-        DatabaseReference postagensReference = databaseReference
-                .child("postagens")
-                .child(getIdUsuario())
-                .child(getIdPostagem());
-        postagensReference.setValue(this);
+
+        //referencia para a postagem
+        String combinacaoId = "/" + getIdUsuario() + "/" + getIdPostagem();
+        object.put("/postagens" + combinacaoId, this);
+
+        //referencia para o feed
+        /*
+        feed
+            .id_seguidor
+                .id_postagem
+                    .id_usuario_que_postou
+         */
+        for(DataSnapshot seguidores : seguidoresSnapshot.getChildren()){
+            HashMap<String, Object> dadosSeguidor = new HashMap<>();
+            dadosSeguidor.put("caminhoImagem", getCaminhoImagem());
+            dadosSeguidor.put("descricao", getDescricao());
+            dadosSeguidor.put("idPostagem", getIdPostagem());
+            dadosSeguidor.put("nomeUsuario", usuarioLogado.getNome());
+            dadosSeguidor.put("fotoUsuario", usuarioLogado.getFoto());
+
+            String idSeguidor = seguidores.getKey();
+            String idAtualizacao = "/" + idSeguidor + "/" + getIdPostagem();
+            object.put("/feed" + idAtualizacao, dadosSeguidor);
+        }
+
+        databaseReference.updateChildren(object);
+
         return true;
     }
 
