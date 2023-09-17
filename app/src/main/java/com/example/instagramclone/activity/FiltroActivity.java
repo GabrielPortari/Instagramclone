@@ -1,6 +1,7 @@
 package com.example.instagramclone.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
@@ -58,12 +59,11 @@ public class FiltroActivity extends AppCompatActivity {
     private TextInputEditText editTextDescricao;
     private AdapterFiltroMiniatura adapterFiltroMiniatura;
     private RecyclerView recyclerFiltroMiniatura;
-    private ProgressBar progressBar;
 
     private List<FilterCustom> listaFiltros;
     private String idUsuarioLogado;
     private Usuario usuarioLogado;
-    private boolean carregandoEstado;
+    private AlertDialog alertDialog;
 
     private DatabaseReference usuariosReference;
     private DatabaseReference usuarioLogadoReference;
@@ -84,7 +84,6 @@ public class FiltroActivity extends AppCompatActivity {
             imagem = BitmapFactory.decodeByteArray(dadosImagem, 0, dadosImagem.length);
             imagemEscolhida.setImageBitmap(imagem);
             imagemFiltro = imagem.copy(imagem.getConfig(), true);
-
 
             //configuracoes recyclerview e adapter
             adapterFiltroMiniatura = new AdapterFiltroMiniatura(listaFiltros, imagem, getApplicationContext());
@@ -133,7 +132,6 @@ public class FiltroActivity extends AppCompatActivity {
         imagemEscolhida = findViewById(R.id.imageEscolhidaFiltro);
         recyclerFiltroMiniatura = findViewById(R.id.recyclerFiltro);
         editTextDescricao = findViewById(R.id.inputEditTextDescricaoFiltro);
-        progressBar = findViewById(R.id.progressBarFiltro);
 
         listaFiltros = new ArrayList<>();
         idUsuarioLogado = UsuarioFirebase.getIdUsuario();
@@ -146,23 +144,14 @@ public class FiltroActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_close_24);
     }
 
-    private void carregando (boolean estado){
-        if(estado){
-            carregandoEstado = true;
-            progressBar.setVisibility(View.VISIBLE);
-        }else{
-            carregandoEstado = false;
-            progressBar.setVisibility(View.GONE);
-        }
-    }
     private void recuperarDadosUsuarioLogado(){
-        carregando(true);
+        dialogCarregando("Carregando, aguarde!");
         usuarioLogadoReference = usuariosReference.child(idUsuarioLogado);
         usuarioLogadoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 usuarioLogado = snapshot.getValue(Usuario.class);
-                carregando(false);
+                alertDialog.cancel();
             }
 
             @Override
@@ -193,15 +182,23 @@ public class FiltroActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    private void dialogCarregando(String titulo){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle(titulo);
+        alert.setCancelable(false);
+        alert.setView(R.layout.carregamento);
+
+        alertDialog = alert.create();
+        alertDialog.show();
+
+    }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.menu_publicar){
             //publicar a imagem
-            if(!carregandoEstado){
-                publicarPostagem();
-            }else{
-                Toast.makeText(this, "Carregando, aguarde", Toast.LENGTH_SHORT).show();
-            }
+            dialogCarregando("Salvando");
+            publicarPostagem();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -245,6 +242,7 @@ public class FiltroActivity extends AppCompatActivity {
                             usuarioLogado.setPostagens(qtPostagens);
                             usuarioLogado.atualizarQuantidadePostagens();
                             Toast.makeText(FiltroActivity.this, "Sucesso ao salvar postagem", Toast.LENGTH_SHORT).show();
+                            alertDialog.cancel();
                             finish();
                         }
                     }
