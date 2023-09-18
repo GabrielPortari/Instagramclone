@@ -2,65 +2,93 @@ package com.example.instagramclone.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.adapter.AdapterFeed;
+import com.example.instagramclone.helper.ConfiguracaoFirebase;
+import com.example.instagramclone.helper.UsuarioFirebase;
+import com.example.instagramclone.model.Feed;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FeedFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class FeedFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerFeed;
+    private AdapterFeed adapterFeed;
+    private List<Feed> listaFeed;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String idUsuarioLogado;
 
-    public FeedFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FeedFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FeedFragment newInstance(String param1, String param2) {
-        FeedFragment fragment = new FeedFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private ValueEventListener valueEventListenerFeed;
+    private DatabaseReference feedReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feed, container, false);
+        //inflate fragment
+        View view = inflater.inflate(R.layout.fragment_feed, container, false);
+        configuracoesIniciais(view);
+
+        //configuracoes recycler view
+        recyclerFeed.setHasFixedSize(true);
+        recyclerFeed.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapterFeed = new AdapterFeed(listaFeed, getActivity());
+        recyclerFeed.setAdapter(adapterFeed);
+
+        return view;
+    }
+    private void configuracoesIniciais(View view){
+        //inicializar componente
+        recyclerFeed = view.findViewById(R.id.recyclerFeed);
+        listaFeed = new ArrayList<>();
+
+        idUsuarioLogado = UsuarioFirebase.getIdUsuario();
+        feedReference = ConfiguracaoFirebase.getFirebaseDatabaseReference()
+                .child("feed")
+                .child(idUsuarioLogado);
+
+    }
+    private void recuperarFeed(){
+        valueEventListenerFeed = feedReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()){
+                    listaFeed.add(ds.getValue(Feed.class));
+                }
+                Collections.reverse(listaFeed);
+                adapterFeed.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        recuperarFeed();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        feedReference.removeEventListener(valueEventListenerFeed);
     }
 }

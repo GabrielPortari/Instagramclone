@@ -50,6 +50,7 @@
 
     <!-- visualizar postagem activity -->
     <string name="curtidas">0 curtidas</string>
+    <string name="zerocurtidas">0</string>
     <string name="visualizar_comentarios">Visualizar comentários</string>
 
 
