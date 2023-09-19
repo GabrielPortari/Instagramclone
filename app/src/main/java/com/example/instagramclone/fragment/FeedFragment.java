@@ -66,6 +66,7 @@ public class FeedFragment extends Fragment {
         valueEventListenerFeed = feedReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listaFeed.clear();
                 for (DataSnapshot ds : snapshot.getChildren()){
                     listaFeed.add(ds.getValue(Feed.class));
                 }

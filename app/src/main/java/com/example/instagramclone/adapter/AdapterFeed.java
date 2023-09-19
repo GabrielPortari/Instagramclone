@@ -1,6 +1,7 @@
 package com.example.instagramclone.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.instagramclone.R;
+import com.example.instagramclone.activity.ComentariosActivity;
 import com.example.instagramclone.helper.ConfiguracaoFirebase;
 import com.example.instagramclone.helper.UsuarioFirebase;
 import com.example.instagramclone.model.Feed;
@@ -58,6 +60,15 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
 
         holder.textNome.setText(feed.getNomeUsuario());
         holder.textDescricao.setText(feed.getDescricao());
+
+        holder.buttonComentarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ComentariosActivity.class);
+                intent.putExtra("idPostagem", feed.getIdPostagem());
+                context.startActivity(intent);
+            }
+        });
 
         /*estrutura
         postagens-curtidas
@@ -129,7 +140,7 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        private TextView textDescricao, textQuantidadeLikes, textNome;
+        private TextView textDescricao, textQuantidadeComentarios, textQuantidadeLikes, textNome;
         private CircleImageView circleImagePerfil;
         private ImageView imagemPostada, buttonLike, buttonComentarios;
 

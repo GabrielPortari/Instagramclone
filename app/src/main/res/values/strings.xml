@@ -52,6 +52,10 @@
     <string name="curtidas">0 curtidas</string>
     <string name="zerocurtidas">0</string>
     <string name="visualizar_comentarios">Visualizar comentários</string>
+    
+    <!-- activity comentario -->
+    <string name="escreva_coment">Escreva um comentário</string>
+    <string name="comentario">Comentário</string>
 
 
 </resources>

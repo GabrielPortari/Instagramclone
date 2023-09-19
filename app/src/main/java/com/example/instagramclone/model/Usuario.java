@@ -47,9 +47,12 @@ public class Usuario implements Serializable {
     }
     public void atualizarNoFirebase(){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
-        DatabaseReference userRef = databaseReference.child("usuarios").child(getId());
+        Map objeto = new HashMap<>();
+        objeto.put("/usuarios/" + getId() + "/nome", getNome());
+        objeto.put("/usuarios/" + getId() + "/foto", getFoto());
 
-        userRef.updateChildren(recuperarMap());
+        databaseReference.updateChildren(objeto);
+
     }
     public Map<String, Object> recuperarMap(){
         HashMap<String, Object> usuarioMap = new HashMap<>();
